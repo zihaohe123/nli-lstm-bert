@@ -1,5 +1,5 @@
 # nli-lstm-bert
-This is a repo for natural language inference using Match-LSTM and pre-trained BERT.
+This is a repo for natural language inference using Match-LSTM and pre-trained BERT. This repo is based on https://github.com/donghyeonk/match-lstm.
 
 
 ## Examples
