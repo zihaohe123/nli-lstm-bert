@@ -108,7 +108,7 @@ class SNLIDataBert(Dataset):
             shuffle=shuffle,
             batch_size=batch_size,
             num_workers=num_workers,
-            pin_memory=pin_memory
+            pin_memory=pin_memory,
         )
 
         dev_loader = DataLoader(
@@ -126,7 +126,7 @@ class SNLIDataBert(Dataset):
             shuffle=shuffle,
             batch_size=batch_size,
             num_workers=num_workers,
-            pin_memory=pin_memory
+            pin_memory=pin_memory,
         )
 
         dev_loader = DataLoader(

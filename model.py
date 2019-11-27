@@ -36,6 +36,7 @@ class MatchLSTM(nn.Module):
         # BERT Model. We use a pre-trained one.
         self.bert = BertModel.from_pretrained('bert-base-uncased')
 
+        # if not fine-tuning Bert, we freeze its gradients
         if not config.train_bert:
             for param in self.bert.parameters():
                 param.requires_grad = False
@@ -88,7 +89,6 @@ class MatchLSTM(nn.Module):
         hypothesis_len = hypothesis_len[h_idx_unsort]  # because we have two sentences here, we need to restore the order to ensuring matching
 
         # matchLSTM. This is the core of this paper.
-        batch_size = premise.shape[0]
         h_m_k = torch.zeros((batch_size, self.config.hidden_size), device=self.device)
         c_m_k = torch.zeros((batch_size, self.config.hidden_size), device=self.device)
         h_last = torch.zeros((batch_size, self.config.hidden_size), device=self.device)
@@ -136,7 +136,7 @@ class MatchLSTM(nn.Module):
         return self.fc(h_last)
 
     def get_req_grad_params(self, debug=False):
-        print('#parameters: ', end='')
+        print('#LSTM parameters: ', end='')
         params = list()
         total_size = 0
 

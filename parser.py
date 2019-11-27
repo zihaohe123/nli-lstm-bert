@@ -25,9 +25,7 @@ def parser():
     parser.add_argument('--batch_size', type=int, default=32)
     parser.add_argument('--epochs', type=int, default=10)
 
-    parser.add_argument('--log_interval', type=int, default=500, help='Print results on every log_interval batches when training')
     parser.add_argument('--gpu', type=str, default='', help='which gpus to use')
-    parser.add_argument('--test', type=int, default=0)
     args = parser.parse_args()
     pprint.PrettyPrinter().pprint(args.__dict__)
     return args

@@ -26,10 +26,12 @@ python main.py --gpu=0 --train_bert
 Recommended training command:
 
 ```
-python main.py --batch_size=512 --log_interval=30 --gpu=0
+python main.py --batch_size=512 --gpu=0
 ```
 
 If you want to fine-tune Bert which increases the number of parameters significantly, you'd better reduce the batch size.
 ```
-python main.py --batch_size=32 --log_interval=60 --gpu=0
+python main.py --batch_size=32 --gpu=0
+or 
+python main.py --batch_size=64 --gpu=0,1
 ```

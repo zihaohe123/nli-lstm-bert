@@ -1,4 +1,5 @@
 import os
+import time
 
 
 def prepar_data():
@@ -16,3 +17,17 @@ def prepar_data():
         os.system('mv -f data/snli_1.0/snli_*.txt data/')
     else:
         print('Found')
+
+
+def get_current_time():
+    return str(time.strftime('%Y%m%d%H%M%S', time.localtime(time.time())))[:-2]
+
+
+def calc_eplased_time_since(start_time):
+    curret_time = time.time()
+    seconds = int(curret_time - start_time)
+    hours = seconds // 3600
+    minutes = seconds // 60
+    seconds = seconds % 60
+    time_str = '{:0>2d}h{:0>2d}min{:0>2d}s'.format(hours, minutes, seconds)
+    return time_str
