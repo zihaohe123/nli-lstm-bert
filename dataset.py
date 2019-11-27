@@ -28,7 +28,7 @@ class SNLIDataBert(Dataset):
             with open(os.path.join(self.args.data_path, 'dev_data.pkl'), 'rb') as f:
                 self.dev_data = pickle.load(f)
         else:
-            self.dev_data = self.load_data(self.args.dev_data_path)
+            self.dev_data = self.load_data(self.dev_data_path)
             with open(os.path.join(self.args.data_path, 'dev_data.pkl'), 'wb') as f:
                 pickle.dump(self.dev_data, f)
 
@@ -38,7 +38,7 @@ class SNLIDataBert(Dataset):
             with open(os.path.join(self.args.data_path, 'test_data.pkl'), 'rb') as f:
                 self.test_data = pickle.load(f)
         else:
-            self.test_data = self.load_data(self.args.test_data_path)
+            self.test_data = self.load_data(self.test_data_path)
             with open(os.path.join(self.args.data_path, 'test_data.pkl'), 'wb') as f:
                 pickle.dump(self.test_data, f)
 
@@ -48,7 +48,7 @@ class SNLIDataBert(Dataset):
             with open(os.path.join(self.args.data_path, 'train_data.pkl'), 'rb') as f:
                 self.train_data = pickle.load(f)
         else:
-            self.train_data = self.load_data(self.args.train_data_path)
+            self.train_data = self.load_data(self.train_data_path)
             with open(os.path.join(self.args.data_path, 'train_data.pkl'), 'wb') as f:
                 pickle.dump(self.train_data, f)
 
