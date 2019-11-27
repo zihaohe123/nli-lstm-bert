@@ -6,6 +6,7 @@ from datetime import datetime
 from model import MatchLSTM
 from dataset import SNLIDataBert
 from utils import prepar_data
+from transformers import AdamW
 
 
 class Solver:
@@ -39,9 +40,23 @@ class Solver:
             print("Let's use {} GPUs!".format(device_count))
         model.to(device)
 
+        # LSTM optimizer
         params = model.module.req_grad_params if device_count > 1 else model.req_grad_params
         optimizer = optim.Adam(params, lr=args.lr, betas=(0.9, 0.999), amsgrad=True)
+
+        # Bert optimizer
+        param_optimizer = list(model.bert.named_parameters())
+        no_decay = ['bias', 'gamma', 'beta']
+        optimizer_grouped_parameters = [
+            {'params': [p for n, p in param_optimizer if not any(nd in n for nd in no_decay)],
+             'weight_decay_rate': 0.01},
+            {'params': [p for n, p in param_optimizer if any(nd in n for nd in no_decay)],
+             'weight_decay_rate': 0.0}
+        ]
+        optimizer_bert = AdamW(optimizer_grouped_parameters, lr=2e-5)
+
         loss_func = nn.CrossEntropyLoss()
+        args.name += '_bert' if args.train_bert else ''
         ckpt_path = os.path.join('ckpt', '{}.pth'.format(args.name))
         if not os.path.exists(ckpt_path):
             print('Not found ckpt', ckpt_path)
@@ -49,6 +64,7 @@ class Solver:
         self.args = args
         self.model = model
         self.optimizer = optimizer
+        self.optimizer_bert = optimizer_bert
         self.loss_func = loss_func
         self.device = device
         self.snli_dataset = snli_dataset
@@ -107,11 +123,13 @@ class Solver:
             target = y.to(self.device)
             output = self.model(pair_token_ids, premise_lens, hypothesis_lens, mask_ids, seg_ids)
             self.optimizer.zero_grad()
+            self.optimizer_bert.zero_grad()
             loss = self.loss_func(output, target)
             loss.backward()
             if self.args.grad_max_norm > 0.:
                 torch.nn.utils.clip_grad_norm_(self.model.req_grad_params, self.args.grad_max_norm)
             self.optimizer.step()
+            self.optimizer_bert.step()
 
             batch_loss = len(output) * loss.item()
             train_loss += batch_loss

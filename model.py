@@ -16,13 +16,6 @@ class MatchLSTM(nn.Module):
         # TODO emb_partial update
         # https://github.com/shuohangwang/SeqMatchSeq/blob/master/main/main.lua#L42
 
-        # BERT Model. We use a pre-trained one.
-        self.bert = BertModel.from_pretrained('bert-base-uncased')
-
-        if not config.train_bert:
-            for param in self.bert.parameters():
-                param.requires_grad = False
-
         self.w_e = nn.Parameter(torch.zeros(config.hidden_size), requires_grad=True)
         self.w_s = nn.Linear(in_features=config.hidden_size, out_features=config.hidden_size, bias=False)
         self.w_t = nn.Linear(in_features=config.hidden_size, out_features=config.hidden_size, bias=False)
@@ -37,7 +30,15 @@ class MatchLSTM(nn.Module):
         self.dropout_fc = nn.Dropout(p=config.dropout_fc)
         self.dropout_emb = nn.Dropout(p=config.dropout_emb)
 
+        # Bert parameters not included because we haven't deifined BERT yet
         self.req_grad_params = self.get_req_grad_params(debug=False)
+
+        # BERT Model. We use a pre-trained one.
+        self.bert = BertModel.from_pretrained('bert-base-uncased')
+
+        if not config.train_bert:
+            for param in self.bert.parameters():
+                param.requires_grad = False
 
     def init_linears(self):
         nn.init.uniform_(self.w_e)
