@@ -31,7 +31,7 @@ python main.py --batch_size=512 --gpu=0
 
 If you want to fine-tune Bert which increases the number of parameters significantly, you'd better reduce the batch size.
 ```
-python main.py --batch_size=32 --gpu=0
+python main.py --batch_size=32 --gpu=0 --train_bert
 or 
-python main.py --batch_size=64 --gpu=0,1
+python main.py --batch_size=64 --gpu=0,1 --train_bert
 ```
