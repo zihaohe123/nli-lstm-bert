@@ -125,7 +125,7 @@ class Solver:
         # Test
         print('Final result..............')
         test_loss, test_acc = self.evaluate_epoch('Test')
-        print('Test Loss: {.:3f}, Test Acc: {:.3f}'.format(test_loss, test_acc))
+        print('Test Loss: {:.3f}, Test Acc: {:.3f}'.format(test_loss, test_acc))
 
     def train_epoch(self):
         self.model.train()
@@ -210,8 +210,10 @@ class Solver:
 
     def load_model(self):
         print('Load checkpoint', self.ckpt_path)
-        checkpoint = torch.load(self.ckpt_path)
+        checkpoint = torch.load(self.ckpt_path, map_location=self.device)
         try:
             self.model.load_state_dict(checkpoint['state_dict'])
         except:
-            self.model.module.load_state_dict(checkpoint['state_dict'])
+            # if saving a paralleled model but loading an unparalleled model
+            self.model = nn.DataParallel(self.model)
+            self.model.load_state_dict(checkpoint['state_dict'])

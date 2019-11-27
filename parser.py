@@ -24,6 +24,7 @@ def parser():
 
     parser.add_argument('--batch_size', type=int, default=32)
     parser.add_argument('--epochs', type=int, default=10)
+    parser.add_argument('--test', action='store_true', default=False, help='Whether to just test the model')
 
     parser.add_argument('--gpu', type=str, default='', help='which gpus to use')
     args = parser.parse_args()

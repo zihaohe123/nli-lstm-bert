@@ -7,7 +7,10 @@ warnings.filterwarnings("ignore")
 def main():
     args = parser()
     solver = Solver(args)
-    solver.train()
+    if not args.test:
+        solver.train()
+    else:
+        solver.test()
 
 
 if __name__ == '__main__':
