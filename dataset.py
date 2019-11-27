@@ -83,13 +83,13 @@ class SNLIDataBert(Dataset):
                 hypothesis_len = len(hypothesis_ids)
                 segment_ids = torch.tensor(
                     [0] * (premise_len + 2) + [1] * (hypothesis_len + 1))  # sentence 0 and sentence 1
-
                 attention_mask_ids = torch.tensor([1] * (premise_len + hypothesis_len + 3))  # mask padded values
-                mask_ids.append(attention_mask_ids)
+
                 token_ids.append(torch.tensor(pair_token_ids))
                 premise_lens.append(premise_len)
                 hypothesis_lens.append(hypothesis_len)
                 seg_ids.append(segment_ids)
+                mask_ids.append(attention_mask_ids)
                 y.append(self.label_dict[cols[0]])
 
         token_ids = pad_sequence(token_ids, batch_first=True)

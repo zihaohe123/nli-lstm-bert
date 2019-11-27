@@ -45,7 +45,7 @@ class Solver:
         optimizer = optim.Adam(params, lr=args.lr, betas=(0.9, 0.999), amsgrad=True)
 
         # Bert optimizer
-        param_optimizer = list(model.bert.named_parameters())
+        param_optimizer = list(model.module.bert.named_parameters())
         no_decay = ['bias', 'gamma', 'beta']
         optimizer_grouped_parameters = [
             {'params': [p for n, p in param_optimizer if not any(nd in n for nd in no_decay)],
@@ -121,6 +121,9 @@ class Solver:
             mask_ids = mask_ids.to(self.device)
             seg_ids = seg_ids.to(self.device)
             target = y.to(self.device)
+            print(premise_lens.shape)
+            premise_lens = premise_lens.unsqueeze(1)
+            hypothesis_lens = hypothesis_lens.unsqueeze(1)
             output = self.model(pair_token_ids, premise_lens, hypothesis_lens, mask_ids, seg_ids)
             self.optimizer.zero_grad()
             self.optimizer_bert.zero_grad()

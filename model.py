@@ -50,6 +50,8 @@ class MatchLSTM(nn.Module):
 
     def forward(self, pair, premise_len, hypothesis_len, mask_id, seg_id):
         batch_size = pair.shape[0]
+        premise_len = premise_len.squeeze() # batchsize --> batchsize*1 for data parallel
+        hypothesis_len = hypothesis_len.squeeze() # batchsize --> batchsize*1 for data parallel
 
         # feed the pair token ids into BertModel
         pair = self.bert(pair, token_type_ids=seg_id, attention_mask=mask_id)[0]

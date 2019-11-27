@@ -11,10 +11,10 @@ Train the model with default parameters.
 python main.py
 ```
 
-Train the model on GPU 0. Multi-GPU training is currently not supported. We will add this in the near future.
+Train the model on GPU 0 and 1.
 
 ```
-python main.py --gpu=0
+python main.py --gpu=0,1
 ```
 
 Train the model on GPU 0 and finetune Bert.
