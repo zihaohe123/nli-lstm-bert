@@ -55,8 +55,6 @@ class SNLIDataBert(Dataset):
     def load_data(self, path):
         print('Loading data....{}'.format(path))
         token_ids = []
-        premise_lens = []
-        hypothesis_lens = []
         mask_ids = []
         seg_ids = []
         y = []
@@ -86,19 +84,15 @@ class SNLIDataBert(Dataset):
                 attention_mask_ids = torch.tensor([1] * (premise_len + hypothesis_len + 3))  # mask padded values
 
                 token_ids.append(torch.tensor(pair_token_ids))
-                premise_lens.append(premise_len)
-                hypothesis_lens.append(hypothesis_len)
                 seg_ids.append(segment_ids)
                 mask_ids.append(attention_mask_ids)
                 y.append(self.label_dict[cols[0]])
 
         token_ids = pad_sequence(token_ids, batch_first=True)
-        premise_lens = torch.tensor(premise_lens)
-        hypothesis_lens = torch.tensor(hypothesis_lens)
         mask_ids = pad_sequence(mask_ids, batch_first=True)
         seg_ids = pad_sequence(seg_ids, batch_first=True)
         y = torch.tensor(y)
-        dataset = TensorDataset(token_ids, premise_lens, hypothesis_lens, mask_ids, seg_ids, y)
+        dataset = TensorDataset(token_ids, mask_ids, seg_ids, y)
         print(len(dataset))
         return dataset
 

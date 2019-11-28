@@ -133,14 +133,12 @@ class Solver:
         example_count = 0
         correct = 0
         batch_start_time = time.time()
-        for batch_idx, (pair_token_ids, premise_lens, hypothesis_lens, mask_ids, seg_ids, y) in enumerate(self.train_loader):
+        for batch_idx, (pair_token_ids, mask_ids, seg_ids, y) in enumerate(self.train_loader):
             pair_token_ids = pair_token_ids.to(self.device)
             mask_ids = mask_ids.to(self.device)
             seg_ids = seg_ids.to(self.device)
             target = y.to(self.device)
-            premise_lens = premise_lens.unsqueeze(1)    # batchsize --> batchsize*1 for data parallel
-            hypothesis_lens = hypothesis_lens.unsqueeze(1)  # batchsize --> batchsize*1 for data parallel
-            output = self.model(pair_token_ids, premise_lens, hypothesis_lens, mask_ids, seg_ids)
+            output = self.model(pair_token_ids, mask_ids, seg_ids)
             self.optimizer.zero_grad()
             self.optimizer_bert.zero_grad()
             loss = self.loss_func(output, target)
@@ -180,14 +178,12 @@ class Solver:
         eval_loss = 0.
         correct = 0
         with torch.no_grad():
-            for batch_idx, (pair_token_ids, premise_lens, hypothesis_lens, mask_ids, seg_ids, y) in enumerate(loader):
+            for batch_idx, (pair_token_ids, mask_ids, seg_ids, y) in enumerate(loader):
                 pair_token_ids = pair_token_ids.to(self.device)
                 mask_ids = mask_ids.to(self.device)
                 seg_ids = seg_ids.to(self.device)
                 target = y.to(self.device)
-                premise_lens = premise_lens.unsqueeze(1)    # batchsize --> batchsize*1 for data parallel
-                hypothesis_lens = hypothesis_lens.unsqueeze(1)  # batchsize --> batchsize*1 for data parallel
-                output = self.model(pair_token_ids, premise_lens, hypothesis_lens, mask_ids, seg_ids)
+                output = self.model(pair_token_ids, mask_ids, seg_ids)
                 loss = self.loss_func(output, target)
                 eval_loss += len(output) * loss.item()
                 pred = torch.max(output, 1)[1]
