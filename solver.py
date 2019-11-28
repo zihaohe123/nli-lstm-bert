@@ -197,7 +197,6 @@ class Solver:
         return eval_loss, acc
 
     def save_model(self):
-        # save a model and args
         model_dict = dict()
         model_dict['state_dict'] = self.model.state_dict()
         model_dict['m_config'] = self.args
